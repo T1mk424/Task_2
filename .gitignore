@@ -5,6 +5,12 @@ __pycache__/
 allure-report/*
 !allure-report/index.html
 
+allure-report/*
+!allure-report/attachments
+
+allure-report/*
+!allure-report/test-cases
+
 allure-results/
 venv/
 .venv/
