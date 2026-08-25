@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+
+allure-report/*
+!allure-report/index.html
+!allure-report/data/attachments/*
+!allure-report/data/test-cases/*
+
+allure-results/
+venv/
+.venv/
+env/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

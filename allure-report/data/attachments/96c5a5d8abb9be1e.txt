@@ -1,0 +1,1 @@
+Payload for user creation: {'email': 'vatslavzikov@example.com', 'password': '79c5M3fBD&', 'name': 'Карл Арсенович Блинов'}
