@@ -28,13 +28,17 @@ class TestCreateUser:
             payload = generate_user()
 
         with allure.step('Отправка запроса на создание пользователя'):
-            requests.post(f'{Urls.MAIN_URL}{Urls.API_CREATE_USER}', data = payload)
+            first_response = requests.post(f'{Urls.MAIN_URL}{Urls.API_CREATE_USER}', data = payload)
 
         with allure.step('Повторная отправка запроса на создание пользователя'):
             response = requests.post(f'{Urls.MAIN_URL}{Urls.API_CREATE_USER}', data = payload)
 
         with allure.step('Проверка,что код ответа 403 и получили сообщение об ошибке с текстом "User already exists"'):
             assert 403 == response.status_code and response.json()['message'] == ErrorMessage.TEXT_CREATE_403_DOUBLE
+
+        with allure.step('Удаление пользователя, созданного первым запросом'):
+            token = first_response.json()['accessToken']
+            requests.delete(f'{Urls.MAIN_URL}{Urls.API_DELETE_USER}', headers = {'Authorization': token})
 
     @allure.title('Проверка регистрации пользователя без почты')
     def test_create_user_without_email(self):
@@ -45,7 +49,7 @@ class TestCreateUser:
             del payload['email']
         
         with allure.step('Отправка запроса на создание пользователя без почты'):
-            response = requests.post(f'{Urls.MAIN_URL}{Urls.API_CREATE_USER}', data = {})
+            response = requests.post(f'{Urls.MAIN_URL}{Urls.API_CREATE_USER}', data = payload)
 
         with allure.step('Проверка,что код ответа 403 и получили сообщение об ошибке с текстом "Email, password and name are required fields"'):
             assert 403 == response.status_code and response.json()['message'] == ErrorMessage.TEXT_CREATE_403_WRONG
@@ -59,7 +63,7 @@ class TestCreateUser:
             del payload['name']
 
         with allure.step('Отправка запроса на создание пользователя без имени'):
-            response = requests.post(f'{Urls.MAIN_URL}{Urls.API_CREATE_USER}', data = {})
+            response = requests.post(f'{Urls.MAIN_URL}{Urls.API_CREATE_USER}', data = payload)
 
         with allure.step('Проверка,что код ответа 403 и получили сообщение об ошибке с текстом "Email, password and name are required fields"'):
             assert 403 == response.status_code and response.json()['message'] == ErrorMessage.TEXT_CREATE_403_WRONG
@@ -73,7 +77,7 @@ class TestCreateUser:
             del payload['password']
         
         with allure.step('Отправка запроса на создание пользователя без пароля'):
-            response = requests.post(f'{Urls.MAIN_URL}{Urls.API_CREATE_USER}', data = {})
+            response = requests.post(f'{Urls.MAIN_URL}{Urls.API_CREATE_USER}', data = payload)
         
         with allure.step( 'Проверка,что код ответа 403 и получили сообщение об ошибке с текстом "Email, password and name are required fields"'):
             assert 403 == response.status_code and response.json()['message'] == ErrorMessage.TEXT_CREATE_403_WRONG
